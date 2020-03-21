@@ -1,13 +1,13 @@
-# twitter-bot
+# HPlusBot - A transhumanist twitter bot!
 
-This is the repository of the HPlusBot in Twitter.
+This is the repository of the [HPlusBot in Twitter](https://twitter.com/HplusBot).
 
 HPlusBot follows transhumanist thinkers, associations, webpages, and the like.
-Periodically retweets popular post of the followings:
-  - Those that reach a certain number of likes
-  - Those that matches one or more keywords or hashtags
+Periodically retweets recents post that:
+  - reach a certain number of likes
+  - matches one or more keywords or hashtags
   
-The bot is built in Python employing the Tweepy module.
+The bot is built in Python employing Tweepy and Advanced Python Scheduler (APScheduler) libraries.
 
 # What else can do?
 
