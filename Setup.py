@@ -2,13 +2,14 @@ import tweepy
 # TWEEPY API REFERENCE: http://docs.tweepy.org/en/latest/api.html
 import os
 
-KEYWORDS = ["transhumanism", "transhumanist", "transhumanists", "ai", "robots",
-            "futurism", "cybernetics", "cyborg", "cyborgs", "nanotechnology", "biohacking",
-            "crispr", "posthumanism", "posthumanist"]
-HASHTAGS = ["#transhumanism", "#transhumanist", "#ai", "#robotics", '#artificialintelligence',
-            "#genetics",  "#futurism", "#cybernetics", "#cyborg", "#nanotechnology", "#biohacking",
-            "#crispr", "#machineintelligence", "#posthumanism", "#augmentedreality", "#nanotech ",
-            "#agi", "#singularity", "#posthumanist", "#longevity", "#augmentation", "#bionic"]
+LIKES_TO_RETWEET = 7
+
+KEYWORDS = ['ai', 'biohacking', 'crispr', 'cybernetics', 'cyborg', 'cyborgs', 'futurism', 'nanotechnology',
+            'posthumanism', 'posthumanist', 'robots', 'transhumanism', 'transhumanist', 'transhumanists']
+HASHTAGS = ['#agi', '#ai', '#artificialintelligence', '#augmentation', '#augmentedreality', '#biohacking', '#bionic',
+            '#crispr', '#cybernetics', '#cyborg', '#futurism', '#genetics', '#longevity', '#machineintelligence',
+            '#nanotech ', '#nanotechnology', '#posthumanism', '#posthumanist', '#robotics', '#singularity',
+            '#transhumanism', '#transhumanist']
 
 def setup():
     # Authenticate to Twitter and passing keys from environment variables
