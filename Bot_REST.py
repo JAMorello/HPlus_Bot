@@ -159,12 +159,12 @@ def check_recent_tweets(api, username):
 def search_for_users(api):
     """
     This functions search for the first 200 users in Twitter (in the same
-    way as the Find People button on Twitter.com. The  used is: the user must have
-    at least 1000 followers and the bot account does not follow the user. Then, if
-    that criteria is met, then the check_tweets() is called. The info of users that
-    pass the check (their screen_name, number of followers, and profile description)
-    are dumped in a dictionary and after that in a list. The result that appears in the
-    terminal is a filtered     list of users that possibly could be of our interested
+    way as the Find People button on Twitter.com) using the query "transhumanism".
+    The criteria used is: the user must have at least 1000 followers and the bot account
+    does not follow the user. Then, if that criteria is met, then the check_tweets() is called.
+    The info of users that pass the check (their screen_name, number of followers, and profile
+    description) are dumped in a dictionary and after that in a list. The result that appears in
+    the terminal is a filtered list of users that possibly could be of our interested
     (we have to check manually in the webpage).
 
     [The first time calling this function, the output was of more or less 10% of number of items]
