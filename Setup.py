@@ -4,12 +4,16 @@ import os
 
 LIKES_TO_RETWEET = 7
 
-KEYWORDS = ['ai', 'biohacking', 'crispr', 'cybernetics', 'cyborg', 'cyborgs', 'futurism', 'nanotechnology',
-            'posthumanism', 'posthumanist', 'robots', 'transhumanism', 'transhumanist', 'transhumanists']
+KEYWORDS = ['ai', 'biohacking', 'biotechnology','crispr', 'cybernetics', 'cyborg', 'cyborgs', 'enhance', 'futurism',
+            'futurist', 'immortality', 'nanotechnology', 'performance-enhancing', 'posthumanism', 'posthumanist',
+            're-engineering', 'robots', 'singularity', 'techno-utopias', 'transhuman', 'transhumans', 'transhumanism',
+            'transhumanist', 'transhumanists']
 HASHTAGS = ['#agi', '#ai', '#artificialintelligence', '#augmentation', '#augmentedreality', '#biohacking', '#bionic',
             '#crispr', '#cybernetics', '#cyborg', '#futurism', '#genetics', '#longevity', '#machineintelligence',
             '#nanotech ', '#nanotechnology', '#posthumanism', '#posthumanist', '#robotics', '#singularity',
             '#transhumanism', '#transhumanist']
+
+NYT_API_KEY = os.getenv('NYT_API_KEY')
 
 def setup():
     # Authenticate to Twitter and passing keys from environment variables
