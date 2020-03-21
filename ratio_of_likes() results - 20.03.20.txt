@@ -1,0 +1,23 @@
+The ratio_of_likes() function was called the 20/03/2020
+The chosen id tweet from 01/03/2020 (to start the search) was: 1233972953169252352 [from Last_ID_Tweet.txt]
+The bot checked 3277 tweets (no rt) from 48 Followings.
+Only 189 tweets complied with the criteria of keywords and hashtags.
+
+[500>>]
+Quantity =  1
+Total likes =  887
+Ratio =  887.0 
+
+[50-499]
+Quantity =  10
+Total likes =  737
+Ratio =  73.7 
+
+[0-49]
+Quantity =  178
+Total likes=  1385
+Ratio =  7.780898876404494 
+
+As the quantity of tweets with more than 49 likes is almost trivial,
+the chosen ratio from wich decide if the status is going to be 
+retweeted by the bot is: 7 likes.
