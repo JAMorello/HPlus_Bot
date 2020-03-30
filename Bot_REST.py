@@ -10,9 +10,15 @@ from apscheduler.schedulers.background import BackgroundScheduler
 LAST_ID_FILE = "Last_Tweet_ID.txt"
 
 
-def post_tweet(api, text):
-    api.update_status(text)
+def wiki_post_tweet(api):
+    api.update_status(status=HPlus_Pedia.random_page())
     return
+
+
+def nyt_post_tweet(api):
+    api.update_status(status=NYT.scrapper())
+    return
+
 
 def retweet(api):
     """
@@ -199,8 +205,8 @@ if __name__ == "__main__":
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(retweet, 'interval', args=[api], hours=3)
-    scheduler.add_job(HPlus_Pedia.random_page, 'interval', args=[api], hours=8)
-    scheduler.add_job(NYT.scrapper, 'interval', args=[api], hours=24)
+    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=8)
+    scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=24)
     scheduler.start()
 
     Reddit.start_stream(api)

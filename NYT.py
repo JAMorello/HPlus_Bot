@@ -7,7 +7,6 @@ import requests
 # https://requests.readthedocs.io/en/master/
 from bs4 import BeautifulSoup
 # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
-from Bot_REST import post_tweet
 
 API_LINK = "https://api.nytimes.com/svc/search/v2/articlesearch.json?"
 # Check https://developer.nytimes.com/
@@ -19,7 +18,7 @@ LINKS_NYT_FILE = "Links_NYT.txt"
 LINKS_TO_POST_FILE = "Links_to_post.txt"
 
 
-def scrapper(api):
+def scrapper():
     """
     Inserts in a list all the links in Links_to_post.txt. Grabs a random link, scraps the title of the article and the
     date of publication. Returns the title, date, and link, in a formatted sentence to be posted in Twitter. After that,
@@ -39,9 +38,10 @@ def scrapper(api):
         title = trimmed_title
     date = soup_parsed_response.find("meta", attrs={"name": "pdate"})["content"][0:4]
     print("Tweeting article from NYT")
-    post_tweet(api, f"Read a New York Times article from {date} titled \"{title}\". Go to: {links_list[index]}")
 
     store_links_to_post(links_list, index, LINKS_TO_POST_FILE)
+
+    return f"Read a New York Times article from {date} titled \"{title}\". Go to: {links_list[index]}"
 
 
 def gather_data():

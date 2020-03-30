@@ -1,6 +1,5 @@
 import Setup
 import time
-from Bot_REST import post_tweet
 
 SUBREDDITS = ['Transhuman', 'Transhumanism', 'Singularity', 'Futurology']
 
@@ -17,6 +16,6 @@ def start_stream(api):
             else:
                 title = submission.title
             print("Tweeting data from Reddit")
-            post_tweet(api, f"Check out \"{title}\" at: {url}")
+            api.update_status(status=f"Check out \"{title}\" at: {url}")
             time.sleep(60)  # sleeps for one minute to avoid twitter api and reddit api limit rate
             # also to avoid flooding twitter timeline
