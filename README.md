@@ -1,18 +1,27 @@
 # HPlusBot - A transhumanist twitter bot!
 
 This is the repository of the [HPlusBot in Twitter](https://twitter.com/HplusBot).
+This bot tweets and retweets about transhumanism and future related stuff.
+The bot account in Twitter follows transhumanist thinkers, associations, webpages, and the like.
 
-HPlusBot follows transhumanist thinkers, associations, webpages, and the like.
-Periodically retweets recents post that:
-  - reach a certain number of likes
-  - matches one or more keywords or hashtags
-  
-The bot is built in Python employing Tweepy and Advanced Python Scheduler (APScheduler) libraries.
+## What the bot does?
 
-# What else can do?
+1. Periodically retweets recents post of the followed users that:
+    - reach a certain number of likes
+    - matches one or more keywords or hashtags (related to the )
+2. Tweets scrapped data (titles and urls) from:
+    - Random pages from [H+Pedia](https://hpluspedia.org/)
+    - Articles from [The New York Times API](https://developer.nytimes.com/)
+    - Urls shared in subreeddits as:
+        - [/r/Transhumanism](https://www.reddit.com/r/transhumanism/)
+        - [/r/Transhuman](https://www.reddit.com/r/transhuman/)
+        - [/r/Singularity](https://www.reddit.com/r/singularity/)
+        - [/r/Futurology](https://www.reddit.com/r/futurology/)
 
-In the future, the bot will:
-  - Apply the streaming capablities of Twitter API
-  - Apply scrapping in certain transhumanist website like H+Pedia
-  - Tweet links at NYT newspaper articles (through the NYT API)
-  - ¿Perhaps something more like interact in some way with the users?
+The bot applies the REST functionalities of the Twitter api and NYT api, and the streaming one of the Reddit api.
+The bot is built in Python employing the following libraries:
+  - Tweepy
+  - Beautiful Soup
+  - Python Reddit Api Wrapper (PRAW)
+  - Advanced Python Scheduler (APScheduler)
+  - Requests
