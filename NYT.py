@@ -1,81 +1,47 @@
 import Setup
-import requests
+from twitterbot_utilities import word_list, trim_title, load_links_to_post, store_links_to_post
 import json
 import time
 import random
+import requests
+# https://requests.readthedocs.io/en/master/
 from bs4 import BeautifulSoup
+# https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+from Bot_REST import post_tweet
 
-query_list = ["transhumanism", "cyborg", "posthumanism", "futurism", "techno-utopias", "artificial intelligence",
+API_LINK = "https://api.nytimes.com/svc/search/v2/articlesearch.json?"
+# Check https://developer.nytimes.com/
+
+QUERY_LIST = ["transhumanism", "cyborg", "posthumanism", "futurism", "techno-utopias", "artificial intelligence",
               "genetic manipulation", "nanotechnology"]
 
-
-def word_list(string):
-    """
-    Utility function. Deletes punctuation of the abstract, lead paragraph, and main headline of a
-    New York Times articles. This is needed to facilitate the search of matching keywords (else,
-    a lot of articles won´t pass the criteria because that punctuation)
-    """
-    return string.lower().replace('.', '').replace(',', '').replace(':', '').split()
+LINKS_NYT_FILE = "Links_NYT.txt"
+LINKS_TO_POST_FILE = "Links_to_post.txt"
 
 
-def trim_title(string):
-    """
-    Utility function. Deletes certain strings from the title of a New York Time article.
-    """
-    title = string.replace(" - The New York Times", "").replace("IE=e ", "")\
-                          .replace("Blog ", "").replace("NYT_ ", "").replace(" - International Herald Tribune", "")\
-                          .replace("- Editorials & Commentary", "").replace("Opinion | ", "")\
-                          .replace("TECHNOLOGY; ", "").replace("ART;\n", "").replace("PERFORMANCE ART;", "")\
-                          .replace("ESSAY; ", "").replace("ALT / ", "").replace("Review/Film;   ", "")\
-                          .replace("NOTICED; ", "").replace("DOWNTIME; ", "").replace("PERFORMANCE ART;", "")\
-                          .replace("Technology: CONNECTIONS;", "").replace("PERFORMANCE \n", "")
-    return title
-
-
-def reduce_data():
-    """
-    Utility function. Takes the links in a file, deletes all duplicates, and creates a new file with the remaining links
-    """
-    links_list = list()
-
-    with open("Links_NYT.txt", "r") as file:
-        for line in file:
-            link = line.replace('\n', '')
-            links_list.append(link)
-
-    result_list = list(set(links_list))  # eliminate duplicate links
-
-    with open("New_Links_NYT.txt", "w") as file:
-        for link in result_list:
-            file.write(link + "\n")
-
-
-def scrapper():
+def scrapper(api):
     """
     Inserts in a list all the links in Links_to_post.txt. Grabs a random link, scraps the title of the article and the
     date of publication. Returns the title, date, and link, in a formatted sentence to be posted in Twitter. After that,
     it deletes the link (deletes the item in the list of links) and overwrites the .txt file with the remaining links.
     This is needed to make sure no link is repeated and posted again; every link must be posted only once.
     """
-    links_list = list()
-    with open("Links_to_post.txt", "r") as file:
-        for line in file:
-            link = line.replace('\n', '')
-            links_list.append(link)
-
+    links_list = load_links_to_post(LINKS_TO_POST_FILE)
     index = int(random.random() * len(links_list))
 
     response = requests.get(links_list[index])
     soup_parsed_response = BeautifulSoup(response.text, 'html.parser')
     string = soup_parsed_response.find('title').text
-    title = trim_title(string)
+    trimmed_title = trim_title(string)
+    if len(trimmed_title) > 100:
+        title = trimmed_title[:100]+'...'
+    else:
+        title = trimmed_title
     date = soup_parsed_response.find("meta", attrs={"name": "pdate"})["content"][0:4]
-    print(f"Read a New York Times article from {date} titled \"{title}\". Go to: {links_list[index]}")
+    print("Tweeting article from NYT")
+    post_tweet(api, f"Read a New York Times article from {date} titled \"{title}\". Go to: {links_list[index]}")
 
-    links_list.pop(index)
-    with open("Links_to_post.txt", "w") as file:
-        for link in links_list:
-            file.write(link + "\n")
+    store_links_to_post(links_list, index, LINKS_TO_POST_FILE)
 
 
 def gather_data():
@@ -93,9 +59,9 @@ def gather_data():
     manually check and delete.
     """
     num_links = 0
-    with open("Links_NYT.txt", "w") as file:
+    with open(LINKS_NYT_FILE, "w") as file:
 
-        for query in query_list:
+        for query in QUERY_LIST:
             subject = query.upper() + "\n"
             file.write(subject)
 
@@ -106,7 +72,7 @@ def gather_data():
                         "page": str(i),
                         "api-key": Setup.NYT_API_KEY
                     }
-                    response = requests.get("https://api.nytimes.com/svc/search/v2/articlesearch.json?", params=payload)
+                    response = requests.get(API_LINK, params=payload)
                     print(response.url)
                     data = json.loads(response.text)
 
@@ -131,8 +97,8 @@ def gather_data():
                                 file.write(url_string)
 
                             time.sleep(6)
-                    except Exception as e:  # raises error as there are no more articles in the page
+                    except Exception:  # raises error as there are no more articles in the page
                         break
                     time.sleep(10)  # sleep 10 seconds between calls to avoid hitting the per minute rate limit
-            except Exception as e:  # raises error as there are no more pages of the query
+            except Exception:  # raises error as there are no more pages of the query
                 continue  # goes to the next query search
