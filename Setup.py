@@ -1,5 +1,8 @@
 import tweepy
 # TWEEPY API REFERENCE: http://docs.tweepy.org/en/latest/api.html
+import praw
+# CHECK REDDIT API ---> https://www.reddit.com/dev/api
+# PRAW (Python Reddit API Wrapper) documentation: https://praw.readthedocs.io/en/latest/
 import os
 
 LIKES_TO_RETWEET = 7
@@ -14,8 +17,10 @@ HASHTAGS = ['#agi', '#ai', '#artificialintelligence', '#augmentation', '#augment
             '#transhumanism', '#transhumanist']
 
 NYT_API_KEY = os.getenv('NYT_API_KEY')
+# Check https://developer.nytimes.com/
 
-def setup():
+
+def setup_twitter():
     # Authenticate to Twitter and passing keys from environment variables
     auth = tweepy.OAuthHandler(os.getenv('CONSUMER_KEY'), os.getenv('CONSUMER_SECRET'))
     auth.set_access_token(os.getenv('ACCESS_TOKEN'), os.getenv('ACCESS_TOKEN_SECRET'))
@@ -31,3 +36,10 @@ def setup():
         print("Error during authentication")
 
     return api
+
+
+def setup_reddit():
+    reddit = praw.Reddit(client_id=os.getenv('REDDIT_CLIENT_ID'),
+                         client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
+                         user_agent='python:HPlus_Bot:v1 (by /u/KamizakeRobot)')
+    return reddit
