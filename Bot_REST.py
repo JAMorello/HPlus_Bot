@@ -1,15 +1,18 @@
 import Setup
 import tweepy
-import json
-from apscheduler.schedulers.blocking import BlockingScheduler
+import time
+import Reddit
+import HPlus_Pedia
+import NYT
+from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, store_last_seen_id
+from apscheduler.schedulers.background import BackgroundScheduler
+
+LAST_ID_FILE = "Last_Tweet_ID.txt"
 
 
-def to_json(twitter_object):
-    # The object that the API give us about the user or the tweets is messy.
-    # We need a json to properly access the data.
-    json_str = json.dumps(twitter_object._json)  # convert to string
-    return json.loads(json_str)  # deserialise string into python object
-
+def post_tweet(api, text):
+    api.update_status(text)
+    return
 
 def retweet(api):
     """
@@ -19,21 +22,19 @@ def retweet(api):
     last tweet retweeted is stored in the .txt to serve as the starting point of the next call to the function.
     """
 
-    file = open("Last_Tweet_ID.txt")
-    last_tweet_id = int(file.read())  # ID of last status retweeted
-    file.close()
-
+    last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
     users_followed = api.friends_ids(screen_name="HPlusBot")  # List of IDs of users that the bot follows
+    most_recent_status_id = 0
 
     for user in users_followed:
 
         tweets_list = tweepy.Cursor(api.user_timeline, id=user, tweet_mode='extended',
-                                    since_id=last_tweet_id).items()
+                                    since_id=last_retweet_id).items()
 
         for tweet in tweets_list:
 
             parsed_tweet = to_json(tweet)
-            tweet_text = parsed_tweet["full_text"].lower().split()
+            tweet_text = word_list(parsed_tweet["full_text"])
 
             if not tweet_text[0] == "rt" and parsed_tweet["favorite_count"] >= Setup.LIKES_TO_RETWEET:
                 # Checks if the status is not a retweet and if it has at least x likes required
@@ -44,14 +45,14 @@ def retweet(api):
                     # of those)
 
                     api.retweet(id=parsed_tweet["id"])
+                    print(f'Retweet: {parsed_tweet["id"]}')
+                    time.sleep(5)  # If there is a lot of status to retweet, it´s better to avoid the api limit rate
 
-                    if parsed_tweet["id"] > last_tweet_id:
-                        last_tweet_id = parsed_tweet["id"]
+                    if parsed_tweet["id"] > most_recent_status_id:
+                        most_recent_status_id = parsed_tweet["id"]
 
     print("Retweeting done!")
-
-    with open('Last_Tweet_ID.txt', 'w') as file:
-        file.write(str(last_tweet_id))
+    store_last_seen_id(LAST_ID_FILE, most_recent_status_id)
 
 
 def ratio_of_likes(api):
@@ -79,23 +80,21 @@ def ratio_of_likes(api):
     }
     total_tweets = 0
 
-    file = open("Last_Tweet_ID.txt")
-    last_tweet_id = file.read()  # ID of last status retweeted
-    file.close()
+    last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
 
     users_followed = api.friends_ids(screen_name="HPlusBot")   # List of IDs of users that the bot follows
 
     for user in users_followed:
 
         tweets_list = tweepy.Cursor(api.user_timeline, id=user, tweet_mode='extended',
-                                    since_id=last_tweet_id).items()
+                                    since_id=last_retweet_id).items()
 
         for tweet in tweets_list:
 
             parsed = to_json(tweet)
             total_tweets += 1
 
-            tweet_text = parsed["full_text"].lower().split()
+            tweet_text = word_list(parsed["full_text"])
 
             if not tweet_text[0] == "rt":  # Checks if the status is not a retweet
 
@@ -146,7 +145,7 @@ def check_recent_tweets(api, username):
         # We need a json to properly access the data.
         parsed = to_json(tweet)
 
-        tweet_text = parsed["text"].lower().split()  # A list that contains all the words of the tweet
+        tweet_text = word_list(parsed["text"])  # A list that contains all the words of the tweet
 
         if any(elem in Setup.KEYWORDS for elem in tweet_text) or \
                 any(elem in Setup.HASHTAGS for elem in tweet_text):
@@ -196,9 +195,12 @@ def search_for_users(api):
 
 
 if __name__ == "__main__":
-    api = Setup.setup()
+    api = Setup.setup_twitter()
 
-    # The retweet() function is going to be called every two hours
-    # scheduler = BlockingScheduler()
-    # scheduler.add_job(retweet, 'interval', args=[api], hours=2)
-    # scheduler.start()
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(retweet, 'interval', args=[api], hours=3)
+    scheduler.add_job(HPlus_Pedia.random_page, 'interval', args=[api], hours=8)
+    scheduler.add_job(NYT.scrapper, 'interval', args=[api], hours=24)
+    scheduler.start()
+
+    Reddit.start_stream(api)
