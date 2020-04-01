@@ -1,4 +1,5 @@
 import Setup
+import tweepy
 import time
 
 SUBREDDITS = ['Transhuman', 'Transhumanism', 'Singularity', 'Futurology']
@@ -16,6 +17,9 @@ def start_stream(api):
             else:
                 title = submission.title
             print("Tweeting data from Reddit")
-            api.update_status(status=f"Check out \"{title}\" at: {url}")
+            try:
+                api.update_status(status=f"Check out \"{title}\" at: {url}")
+            except:
+                continue
             time.sleep(30)  # sleeps for half minute to avoid twitter api and reddit api limit rate
             # also to avoid flooding twitter timeline
