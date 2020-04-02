@@ -5,8 +5,8 @@ import Reddit
 import HPlus_Pedia
 import NYT
 from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, store_last_seen_id
-from apscheduler.schedulers.background import BackgroundScheduler
-
+from apscheduler.schedulers.blocking import BlockingScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 LAST_ID_FILE = "Last_Tweet_ID.txt"
 
 
@@ -205,7 +205,7 @@ def search_for_users(api):
 if __name__ == "__main__":
     api = Setup.setup_twitter()
 
-    scheduler = BackgroundScheduler()
+    scheduler = BlockingScheduler()
     scheduler.add_job(retweet, 'interval', args=[api], hours=3)
     scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=6)
     scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=24)
