@@ -16,10 +16,11 @@ def start_stream(api):
                 title = submission.title[:100] + '...'
             else:
                 title = submission.title
-            print("Tweeting data from Reddit")
             try:
+                print("Tweeting data from Reddit")
                 api.update_status(status=f"Check out \"{title}\" at: {url}")
             except:
+                print("No tweeting a duplicated status")
                 continue
-            time.sleep(30)  # sleeps for half minute to avoid twitter api and reddit api limit rate
+            time.sleep(60)  # sleeps for one minute to avoid twitter api and reddit api limit rate
             # also to avoid flooding twitter timeline
