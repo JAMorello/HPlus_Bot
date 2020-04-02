@@ -49,10 +49,12 @@ def retweet(api):
                         any(elem in Setup.KEYWORDS for elem in tweet_text):
                     # Checks if the tweet matches the criteria of keywords or hashtags (at least one element of any
                     # of those)
-
-                    api.retweet(id=parsed_tweet["id"])
-                    print(f'Retweet: {parsed_tweet["id"]}')
-                    time.sleep(5)  # If there is a lot of status to retweet, it´s better to avoid the api limit rate
+                    try:
+                        api.retweet(id=parsed_tweet["id"])
+                        print(f'Retweet: {parsed_tweet["id"]}')
+                        time.sleep(5)  # If there is a lot of status to retweet, it´s better to avoid the api limit rate
+                    except:
+                        print("Already retweeted")
 
                     if parsed_tweet["id"] > most_recent_status_id:
                         most_recent_status_id = parsed_tweet["id"]
@@ -205,8 +207,8 @@ if __name__ == "__main__":
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(retweet, 'interval', args=[api], hours=3)
-    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=8)
+    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=6)
     scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=24)
     scheduler.start()
 
-    Reddit.start_stream(api)
+    # Reddit.start_stream(api)
