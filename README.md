@@ -1,8 +1,8 @@
 # HPlusBot - A transhumanist twitter bot!
 
 This is the repository of the [HPlusBot in Twitter](https://twitter.com/HplusBot).
-This bot tweets and retweets about transhumanism and future related stuff.
-The bot account in Twitter follows transhumanist thinkers, associations, webpages, and the like.
+The bot account in Twitter follows transhumanist thinkers, associations, webpages, and the like; and tweets and retweets 
+about transhumanism and future related stuff.
 
 ## What the bot does?
 
@@ -25,3 +25,8 @@ The bot is built in Python employing the following libraries:
   - Python Reddit Api Wrapper (PRAW)
   - Advanced Python Scheduler (APScheduler)
   - Requests
+  
+ #### Note:
+ 
+ The script is ran through Heroku, so the script suffered some modifications (because the Heroku slug resets every 24 hs). 
+ It is diferent if it ran through personal terminal.
