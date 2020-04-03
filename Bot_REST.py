@@ -5,9 +5,24 @@ import Reddit
 import HPlus_Pedia
 import NYT
 from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, store_last_seen_id
-from apscheduler.schedulers.blocking import BlockingScheduler
-# from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+
 LAST_ID_FILE = "Last_Tweet_ID.txt"
+# In Heroku, this file has a very limited use. It was intended to be used as a starting point in each iteration of
+# the retweet function, as the ID it contains is renewed at the end of each iteration (is written the iD of the last
+# tweet retweeted). This is done this way to avoid going all the way through a lot of tweets in an user timeline
+# (from x to y; ej: from a tweet of 1st March all the way to the last one in 31st of March). So, the file should change
+# in each iteration and this should be indefinitely.
+#
+# But changes made directly to the filesystem on Heroku dynos will be lost whenever the dyno restarts.
+# This happens frequently: Dynos are also restarted (cycled) at least once per day to help maintain the health of
+# applications running on Heroku. Any changes to the local filesystem will be deleted. The cycling happens once every 24
+# hours (plus up to 216 random  minutes, to prevent every dyno for an application from restarting at the same time).
+# So, the way Heroku works makes the work the file is supposed to do very limited as the content of the file is restored
+# to the original ID. (Check out: https://stackoverflow.com/questions/42194043/can-heroku-edit-files)
+#
+# To avoid in some way going all the way through a lot of tweets in an user timeline (as it was intended originally),
+# once in a while is needed a manual overwriting of the file and push to heroku master.
 
 
 def wiki_post_tweet(api):
@@ -27,7 +42,6 @@ def retweet(api):
     of likes, and were posted after a certain tweet (that is stored in Last_Tweet_ID.txt). At the end, the ID of the
     last tweet retweeted is stored in the .txt to serve as the starting point of the next call to the function.
     """
-
     last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
     users_followed = api.friends_ids(screen_name="HPlusBot")  # List of IDs of users that the bot follows
     most_recent_status_id = 0
@@ -52,9 +66,11 @@ def retweet(api):
                     try:
                         api.retweet(id=parsed_tweet["id"])
                         print(f'Retweet: {parsed_tweet["id"]}')
-                        time.sleep(5)  # If there is a lot of status to retweet, it´s better to avoid the api limit rate
+                        time.sleep(5)
+                        # If there is a lot of status to go through, it´s better to avoid the api limit rate with sleep.
                     except:
                         print("Already retweeted")
+                        time.sleep(5)
 
                     if parsed_tweet["id"] > most_recent_status_id:
                         most_recent_status_id = parsed_tweet["id"]
@@ -205,10 +221,10 @@ def search_for_users(api):
 if __name__ == "__main__":
     api = Setup.setup_twitter()
 
-    scheduler = BlockingScheduler()
+    scheduler = BackgroundScheduler()
     scheduler.add_job(retweet, 'interval', args=[api], hours=3)
-    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=6)
-    scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=24)
+    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=5)
+    scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=12)
     scheduler.start()
 
-    # Reddit.start_stream(api)
+    Reddit.start_stream(api)
