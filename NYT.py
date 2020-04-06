@@ -15,7 +15,10 @@ QUERY_LIST = ["transhumanism", "cyborg", "posthumanism", "futurism", "techno-uto
               "genetic manipulation", "nanotechnology"]
 
 LINKS_NYT_FILE = "Links_NYT.txt"
+
 LINKS_TO_POST_FILE = "Links_to_post.txt"
+# This file presents some problems when deployed to Heroku.
+# Read "Last_Tweet_ID (note).txt" for more information.
 
 
 def scrapper():
