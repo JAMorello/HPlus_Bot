@@ -28,5 +28,8 @@ The bot is built in Python employing the following libraries:
   
  #### Note:
  
- The script is ran through Heroku, so the script suffered some modifications (because the Heroku slug resets every 24 hs). 
+ - The script is ran through Heroku, so the script suffered some modifications (because the Heroku slug resets every 24 hs). 
  It is diferent if it ran through personal terminal.
+ - I made mistakes with the naming of the files; I did not respect the convention of naming files with all characters in
+ lowercase. But I can´t change the filenames without losing the changes history. In the future I´ll keep more in mind 
+ the PEP8 convention.
