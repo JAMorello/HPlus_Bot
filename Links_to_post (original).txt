@@ -7,6 +7,9 @@ old or uninteresting news, etc.)
 There are 342 links total.
 """
 
+# With this file, in Heroku, happens the same as with the Last_Tweet_ID.txt.
+# Look at "Last_Tweet_Id (note).txt" for more information.
+
 https://www.nytimes.com/2006/07/10/opinion/10iht-edyoung.2165719.html
 https://www.nytimes.com/2002/04/02/science/a-dim-view-of-a-posthuman-future.html
 https://www.nytimes.com/1988/10/23/nyregion/art-works-by-boccioni-on-view-at-yale.html

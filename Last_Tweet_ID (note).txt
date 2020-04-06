@@ -1,0 +1,19 @@
+1246479431750672385
+
+# In Heroku, this file has a very limited use. It was intended to be used as a starting point in each iteration of
+# the retweet function, as the ID it contains is renewed at the end of each iteration (is written the iD of the last
+# tweet retweeted). This is done this way to avoid going all the way through a lot of tweets in an user timeline
+# (from x to y; ej: from a tweet of 1st March all the way to the last one in 31st of March). So, the file should change
+# in each iteration and this should be indefinitely.
+#
+# But changes made directly to the filesystem on Heroku dynos will be lost whenever the dyno restarts.
+# This happens frequently: Dynos are also restarted (cycled) at least once per day to help maintain the health of
+# applications running on Heroku. Any changes to the local filesystem will be deleted. The cycling happens once every 24
+# hours (plus up to 216 random  minutes, to prevent every dyno for an application from restarting at the same time).
+# So, the way Heroku works makes the work the file is supposed to do very limited as the content of the file is restored
+# to the original ID. (Check out: https://stackoverflow.com/questions/42194043/can-heroku-edit-files)
+#
+# To avoid in some way going all the way through a lot of tweets in an user timeline (as it was intended originally),
+# once in a while is needed a manual overwriting of the file and push to heroku master.
+#
+# TODO: Implement a database to avoid the deletion of changed files when the dyno restart.
