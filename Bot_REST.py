@@ -8,21 +8,8 @@ from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, stor
 from apscheduler.schedulers.background import BackgroundScheduler
 
 LAST_ID_FILE = "Last_Tweet_ID.txt"
-# In Heroku, this file has a very limited use. It was intended to be used as a starting point in each iteration of
-# the retweet function, as the ID it contains is renewed at the end of each iteration (is written the iD of the last
-# tweet retweeted). This is done this way to avoid going all the way through a lot of tweets in an user timeline
-# (from x to y; ej: from a tweet of 1st March all the way to the last one in 31st of March). So, the file should change
-# in each iteration and this should be indefinitely.
-#
-# But changes made directly to the filesystem on Heroku dynos will be lost whenever the dyno restarts.
-# This happens frequently: Dynos are also restarted (cycled) at least once per day to help maintain the health of
-# applications running on Heroku. Any changes to the local filesystem will be deleted. The cycling happens once every 24
-# hours (plus up to 216 random  minutes, to prevent every dyno for an application from restarting at the same time).
-# So, the way Heroku works makes the work the file is supposed to do very limited as the content of the file is restored
-# to the original ID. (Check out: https://stackoverflow.com/questions/42194043/can-heroku-edit-files)
-#
-# To avoid in some way going all the way through a lot of tweets in an user timeline (as it was intended originally),
-# once in a while is needed a manual overwriting of the file and push to heroku master.
+# This file presents some problems when deployed to Heroku.
+# Read "Last_Tweet_ID (note).txt" for more information.
 
 
 def wiki_post_tweet(api):
@@ -44,7 +31,7 @@ def retweet(api):
     """
     last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
     users_followed = api.friends_ids(screen_name="HPlusBot")  # List of IDs of users that the bot follows
-    most_recent_status_id = 0
+    most_recent_status_id = last_retweet_id
 
     for user in users_followed:
 
