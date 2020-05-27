@@ -29,7 +29,7 @@ def scrapper():
     This is needed to make sure no link is repeated and posted again; every link must be posted only once.
     """
     links_list = load_links_to_post(LINKS_TO_POST_FILE)
-    index = int(random.random() * len(links_list))
+    index = int(random.random() * len(links_list))  # grab a random link
 
     response = requests.get(links_list[index])
     soup_parsed_response = BeautifulSoup(response.text, 'html.parser')
@@ -40,11 +40,19 @@ def scrapper():
     else:
         title = trimmed_title
     date = soup_parsed_response.find("meta", attrs={"name": "pdate"})["content"][0:4]
-    print("Tweeting article from NYT")
 
     store_links_to_post(links_list, index, LINKS_TO_POST_FILE)
 
+    print("Tweeting article from NYT")
     return f"Read a New York Times article from {date} titled \"{title}\". Go to: {links_list[index]}"
+
+#
+#
+# WARNING!
+# OLD METHOD AHEAD!!
+# ONLY FOR REFERENCE, NOT IN USE ACTUALLY
+#
+#
 
 
 def gather_data():
@@ -58,7 +66,7 @@ def gather_data():
     looked at.
     This function returned 866 links the first time called.
     DISCLAIMER: I had a lot of trouble with the query (standard Lucene syntax), i.e. the filters query fields. So I
-    left aside filters like date and sections. This has as consequence the return of a lot on trash-data I had to
+    left aside filters like date and sections. This has as consequence the return of a lot of trash-data I had to
     manually check and delete.
     """
     num_links = 0

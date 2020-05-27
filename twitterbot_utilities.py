@@ -10,9 +10,8 @@ def to_json(twitter_object):
 
 def word_list(string):
     """
-    Utility function. Deletes punctuation of the abstract, lead paragraph, and main headline of a
-    New York Times articles. This is needed to facilitate the search of matching keywords (else,
-    a lot of articles won´t pass the criteria because that punctuation)
+    Utility function. Deletes punctuation. This is needed to facilitate the search of matching keywords (else,
+    a lot of tweets and articles won´t pass the criteria because that punctuation)
     """
     return string.lower().replace('.', '').replace(',', '').replace(':', '').split()
 

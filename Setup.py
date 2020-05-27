@@ -5,7 +5,6 @@ import praw
 # PRAW (Python Reddit API Wrapper) documentation: https://praw.readthedocs.io/en/latest/
 import os
 
-LIKES_TO_RETWEET = 7
 
 KEYWORDS = ['ai', 'biohacking', 'biotechnology','crispr', 'cybernetics', 'cyborg', 'cyborgs', 'enhance', 'futurism',
             'futurist', 'immortality', 'nanotechnology', 'performance-enhancing', 'posthumanism', 'posthumanist',

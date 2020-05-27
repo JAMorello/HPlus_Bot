@@ -8,8 +8,9 @@ from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, stor
 from apscheduler.schedulers.background import BackgroundScheduler
 
 LAST_ID_FILE = "data/Last_Tweet_ID.txt"
-# This file presents some problems when deployed to Heroku.
-# Read "Last_Tweet_ID (note).txt" for more information.
+# This file presents some problems when deployed to Heroku. See documentation.
+BOT_USERNAME = "HPlusBot"
+LIKES_TO_RETWEET = 7
 
 
 def wiki_post_tweet(api):
@@ -30,8 +31,8 @@ def retweet(api):
     last tweet retweeted is stored in the .txt to serve as the starting point of the next call to the function.
     """
     last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
-    users_followed = api.friends_ids(screen_name="HPlusBot")  # List of IDs of users that the bot follows
     most_recent_status_id = last_retweet_id
+    users_followed = api.friends_ids(screen_name=BOT_USERNAME)  # List of IDs of users that the bot follows
 
     for user in users_followed:
 
@@ -43,27 +44,51 @@ def retweet(api):
             parsed_tweet = to_json(tweet)
             tweet_text = word_list(parsed_tweet["full_text"])
 
-            if not tweet_text[0] == "rt" and parsed_tweet["favorite_count"] >= Setup.LIKES_TO_RETWEET:
+            if not tweet_text[0] == "rt" and parsed_tweet["favorite_count"] >= LIKES_TO_RETWEET:
                 # Checks if the status is not a retweet and if it has at least x likes required
 
                 if any(elem in Setup.HASHTAGS for elem in tweet_text) or \
                         any(elem in Setup.KEYWORDS for elem in tweet_text):
                     # Checks if the tweet matches the criteria of keywords or hashtags (at least one element of any
                     # of those)
+
                     try:
                         api.retweet(id=parsed_tweet["id"])
                         print(f'Retweet: {parsed_tweet["id"]}')
-                        time.sleep(5)
-                        # If there is a lot of status to go through, it´s better to avoid the api limit rate with sleep.
                     except:
                         print("Already retweeted")
-                        time.sleep(5)
+
+                    time.sleep(5)
+                    # If there is a lot of status to go through, it´s better to avoid the api limit rate with sleep.
 
                     if parsed_tweet["id"] > most_recent_status_id:
                         most_recent_status_id = parsed_tweet["id"]
 
     print("Retweeting done!")
     store_last_seen_id(LAST_ID_FILE, most_recent_status_id)
+
+
+if __name__ == "__main__":
+    api = Setup.setup_twitter()
+
+    # As the scheduler is not the only thing running in our process (we also use the streaming from Reddit),
+    # we want the scheduler to run in the background inside the script along other functionalities.
+    scheduler = BackgroundScheduler()
+
+    scheduler.add_job(retweet, 'interval', args=[api], hours=3)
+    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=5)
+    scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=12)
+    scheduler.start()
+
+    Reddit.start_stream(api)
+
+#
+#
+# WARNING!
+# OLD METHODS AHEAD!!
+# ONLY FOR REFERENCE, NOT IN USE ACTUALLY
+#
+#
 
 
 def ratio_of_likes(api):
@@ -196,22 +221,10 @@ def search_for_users(api):
                     }
                     users_data.append(user)
                     print("Data fetched.")
-        except Exception:  # An error can occur if the user has protected tweets.
+        except:  # An error can occur if the user has protected tweets.
             print(f"Failed to run the command on ", parsed["screen_name"], "skipping...\n")
             continue
 
     print("Done\n")
     for user in users_data:
         print(user, "\n")
-
-
-if __name__ == "__main__":
-    api = Setup.setup_twitter()
-
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(retweet, 'interval', args=[api], hours=3)
-    scheduler.add_job(wiki_post_tweet, 'interval', args=[api], hours=5)
-    scheduler.add_job(nyt_post_tweet, 'interval', args=[api], hours=12)
-    scheduler.start()
-
-    Reddit.start_stream(api)
