@@ -14,9 +14,9 @@ API_LINK = "https://api.nytimes.com/svc/search/v2/articlesearch.json?"
 QUERY_LIST = ["transhumanism", "cyborg", "posthumanism", "futurism", "techno-utopias", "artificial intelligence",
               "genetic manipulation", "nanotechnology"]
 
-LINKS_NYT_FILE = "Links_NYT.txt"
+LINKS_NYT_FILE = "data/Links_NYT.txt"
 
-LINKS_TO_POST_FILE = "Links_to_post.txt"
+LINKS_TO_POST_FILE = "data/Links_to_post.txt"
 # This file presents some problems when deployed to Heroku.
 # Read "Last_Tweet_ID (note).txt" for more information.
 

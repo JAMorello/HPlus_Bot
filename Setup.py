@@ -13,7 +13,7 @@ KEYWORDS = ['ai', 'biohacking', 'biotechnology','crispr', 'cybernetics', 'cyborg
             'transhumanist', 'transhumanists']
 HASHTAGS = ['#agi', '#ai', '#artificialintelligence', '#augmentation', '#augmentedreality', '#biohacking', '#bionic',
             '#crispr', '#cybernetics', '#cyborg', '#futurism', '#genetics', '#longevity', '#machineintelligence',
-            '#nanotech ', '#nanotechnology', '#posthumanism', '#posthumanist', '#robotics', '#singularity',
+            '#nanotech', '#nanotechnology', '#posthumanism', '#posthumanist', '#robotics', '#singularity',
             '#transhumanism', '#transhumanist']
 
 NYT_API_KEY = os.getenv('NYT_API_KEY')

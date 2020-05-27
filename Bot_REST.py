@@ -7,7 +7,7 @@ import NYT
 from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, store_last_seen_id
 from apscheduler.schedulers.background import BackgroundScheduler
 
-LAST_ID_FILE = "Last_Tweet_ID.txt"
+LAST_ID_FILE = "data/Last_Tweet_ID.txt"
 # This file presents some problems when deployed to Heroku.
 # Read "Last_Tweet_ID (note).txt" for more information.
 
