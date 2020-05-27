@@ -154,3 +154,9 @@ i.e. some are about art, old or uninteresting news, etc.). The final list consis
 I made mistakes with the naming of the files; I did not respect the convention of naming files with all characters in
 lowercase. But I can´t change the filenames without losing the changes history. In the future I´ll keep more in mind 
 the PEP8 convention.
+
+# Next things to do:
+
+- Make a Sentiment Analysis (check https://www.geeksforgeeks.org/twitter-sentiment-analysis-using-python/)
+- Implement a database where to store all the links to NYT and the last_id_tweet.
+- Implement a database where to dump data from the tweets that the bote made and make some data science analysis
