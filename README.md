@@ -23,22 +23,23 @@ Table of Contents
     - matches one or more keywords or hashtags
 2. Tweets scrapped data (titles and urls) from:
     - Random pages from [H+Pedia](https://hpluspedia.org/)
-    - Articles from [The New York Times API](https://developer.nytimes.com/)
+    - Articles from The New York Times
     - Urls shared in subreeddits as:
         - [/r/Transhumanism](https://www.reddit.com/r/transhumanism/)
         - [/r/Transhuman](https://www.reddit.com/r/transhuman/)
         - [/r/Singularity](https://www.reddit.com/r/singularity/)
         - [/r/Futurology](https://www.reddit.com/r/futurology/)
 
-### Used modules:
+## Used modules:
 
-The bot utilizes the Twitter, The New York Times, and Reddit APIs.
+The bot utilizes the [Twitter](https://developer.twitter.com/en), [The New York Times](https://developer.nytimes.com/), 
+and [Reddit APIs](https://www.reddit.com/dev/api).
 The bot is built in Python employing the following libraries:
-  - Tweepy
-  - Beautiful Soup
-  - Python Reddit Api Wrapper (PRAW)
-  - Advanced Python Scheduler (APScheduler)
-  - Requests
+  - [Tweepy](http://docs.tweepy.org/en/latest/api.html)
+  - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+  - [Python Reddit Api Wrapper (PRAW)](https://praw.readthedocs.io/en/latest/)
+  - [Advanced Python Scheduler (APScheduler)](https://apscheduler.readthedocs.io/en/stable/)
+  - [Requests](https://requests.readthedocs.io/en/master/)
   
   
 ## Things to consider:
