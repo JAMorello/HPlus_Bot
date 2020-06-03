@@ -4,11 +4,11 @@ import time
 import Reddit
 import HPlus_Pedia
 import NYT
-from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id, store_last_seen_id
+from hplusbot_database import db_get_last_tweet_id, db_store_last_tweet_id
+from twitterbot_utilities import to_json, word_list, retrieve_last_seen_id
 from apscheduler.schedulers.background import BackgroundScheduler
 
-LAST_ID_FILE = "data/Last_Tweet_ID.txt"
-# This file presents some problems when deployed to Heroku. See documentation.
+LAST_ID_FILE = 'data/Last_Tweet_ID.txt'
 BOT_USERNAME = "HPlusBot"
 LIKES_TO_RETWEET = 7
 
@@ -30,7 +30,7 @@ def retweet(api):
     of likes, and were posted after a certain tweet (that is stored in Last_Tweet_ID.txt). At the end, the ID of the
     last tweet retweeted is stored in the .txt to serve as the starting point of the next call to the function.
     """
-    last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
+    last_retweet_id = db_get_last_tweet_id()
     most_recent_status_id = last_retweet_id
     users_followed = api.friends_ids(screen_name=BOT_USERNAME)  # List of IDs of users that the bot follows
 
@@ -65,7 +65,7 @@ def retweet(api):
                         most_recent_status_id = parsed_tweet["id"]
 
     print("Retweeting done!")
-    store_last_seen_id(LAST_ID_FILE, most_recent_status_id)
+    db_store_last_tweet_id(most_recent_status_id)
 
 
 if __name__ == "__main__":
@@ -81,6 +81,7 @@ if __name__ == "__main__":
     scheduler.start()
 
     Reddit.start_stream(api)
+
 
 #
 #
@@ -118,7 +119,7 @@ def ratio_of_likes(api):
 
     last_retweet_id = retrieve_last_seen_id(LAST_ID_FILE)
 
-    users_followed = api.friends_ids(screen_name="HPlusBot")   # List of IDs of users that the bot follows
+    users_followed = api.friends_ids(screen_name="HPlusBot")  # List of IDs of users that the bot follows
 
     for user in users_followed:
 

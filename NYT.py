@@ -1,5 +1,6 @@
 import Setup
-from twitterbot_utilities import word_list, trim_title, load_links_to_post, store_links_to_post
+from hplusbot_database import db_num_nyt_links, db_get_nyt_link
+from twitterbot_utilities import word_list, trim_title
 import json
 import time
 import random
@@ -18,7 +19,6 @@ LINKS_NYT_FILE = "data/Links_NYT.txt"
 
 LINKS_TO_POST_FILE = "data/Links_to_post.txt"
 # This file presents some problems when deployed to Heroku.
-# Read "Last_Tweet_ID (note).txt" for more information.
 
 
 def scrapper():
@@ -28,10 +28,11 @@ def scrapper():
     it deletes the link (deletes the item in the list of links) and overwrites the .txt file with the remaining links.
     This is needed to make sure no link is repeated and posted again; every link must be posted only once.
     """
-    links_list = load_links_to_post(LINKS_TO_POST_FILE)
-    index = int(random.random() * len(links_list))  # grab a random link
+    num_nyt_links = db_num_nyt_links()
+    link_id = int(random.random() * num_nyt_links)  # grab a random link
+    link = db_get_nyt_link(link_id)
 
-    response = requests.get(links_list[index])
+    response = requests.get(link)
     soup_parsed_response = BeautifulSoup(response.text, 'html.parser')
     string = soup_parsed_response.find('title').text
     trimmed_title = trim_title(string)
@@ -41,10 +42,8 @@ def scrapper():
         title = trimmed_title
     date = soup_parsed_response.find("meta", attrs={"name": "pdate"})["content"][0:4]
 
-    store_links_to_post(links_list, index, LINKS_TO_POST_FILE)
-
     print("Tweeting article from NYT")
-    return f"Read a New York Times article from {date} titled \"{title}\". Go to: {links_list[index]}"
+    return f"Read a New York Times article from {date} titled \"{title}\". Go to: {link}"
 
 #
 #
