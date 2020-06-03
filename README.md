@@ -38,7 +38,7 @@ Table of Contents
         - [/r/Singularity](https://www.reddit.com/r/singularity/)
         - [/r/Futurology](https://www.reddit.com/r/futurology/)
 
-## Used modules:
+## Used modules
 
 The bot utilizes the [Twitter](https://developer.twitter.com/en), [The New York Times](https://developer.nytimes.com/), 
 and [Reddit APIs](https://www.reddit.com/dev/api).
@@ -51,9 +51,9 @@ The bot is built in Python employing the following libraries:
   - [psycopg2](https://www.psycopg.org/docs/)
   
   
-## Things to consider:
+## Things to consider
 
-#### Project database
+#### Project database:
 
 The script uses a stream listener that captures in real time tweets that comply with a certain filter. In this case, we
 use the keyword 'transhumanism'. With the captured tweet, we scrap data from it and insert them in the project database.
@@ -61,34 +61,34 @@ We use two tables: 'twitter_user' and 'twitter_tweet'. Below we show the schema 
 see the 'twitter_user.csv' and 'twitter_tweet.csv' files in the 'data' folder in this repository. Also, you can see, in
 that same folder, the query that was used to create the tables.
 
-**twitter_user**
+**[twitter_user]**
 
 | user_id_str | user_screen_name | description | location | followers | friends | statuses | favourites |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-1226216507581116417 | HplusBot | Hello! I am bot that follows transhumanist thinkers and tweets/retweets about Transhumanism and future related stuff. Any suggestions? Send me a message! | Argentina (Bs. As.) | 115 | 57 | 4,024 | 1 |
+| 1226216507581116417 | HplusBot | Hello! I am bot that follows transhumanist thinkers and tweets/retweets about Transhumanism and future related stuff. Any suggestions? Send me a message! | Argentina (Bs. As.) | 115 | 57 | 4,024 | 1 |
 
-**twitter_tweet**
+**[twitter_tweet]**
 
 | id | tweet_id_str | text | created_at | tweet_quoted | user_id_str |
 | --- | --- | --- | --- | --- | --- |
-1 | 1268006196524572672 | Hello! This is a test :) transhumanism | 2020-06-02 11:26:10 | NULL | 1226216507581116417 |
+| 1 | 1268006196524572672 | Hello! This is a test :) transhumanism | 2020-06-02 11:26:10 | NULL | 1226216507581116417 |
 
 In the other hand, the project database also have two tables that holds and retrieve data relative to New York Times links
 and the last tweet id that was retweeted. You can see:
 
-**nyt_links**
+**[nyt_links]**
 
 | id | link |
 | --- | --- |
-1 | https://www.nytimes.com/2006/07/10/opinion/10iht-edyoung.2165719.html
+| 1 | https://www.nytimes.com/2006/07/10/opinion/10iht-edyoung.2165719.html |
 
-**tweet_id**
+**[tweet_id]**
 
-id | last_tweet_id
+| id | last_tweet_id |
 | --- | --- |
-1 | 1246479431750672385
+| 1 | 1246479431750672385 |
 
-#### Keywords and Hashtags
+#### Keywords and Hashtags:
 
 The keywords and hashtags are the elements we use to filter all the tweets and the NYT articles and select only those that
 comply with the criteria. They are very similar to each other, but while in Twitter we use both, to search for articles
@@ -144,7 +144,7 @@ Only 189 tweets complied with the criteria of keywords and hashtags.
 As the quantity of tweets with more than 49 likes is almost trivial, the chosen ratio from which decide if the status is
  going to be retweeted by the bot is: 7 likes.
  
-#### Other notes:
+#### Other notes
   
   - The original Last_Tweet_ID was: 1246479431750672385 (a tweet from 4/4/20 by @zoltan_istvan)
   
@@ -166,7 +166,7 @@ them complied to the searching criteria of the code, some links weren´t related
 i.e. some are about art, old or uninteresting news, etc.). The final list consist of *342 links total*.
 
 
-## Old issues:
+## Old issues
 
 #### Heroku deployment:
  
@@ -202,8 +202,6 @@ lowercase. But I can´t change the filenames without losing the changes history.
 the PEP8 convention.
 
 
-## Next things to do:
+## Next things to do
 
 - Make a Sentiment Analysis (check https://www.geeksforgeeks.org/twitter-sentiment-analysis-using-python/)
-- Implement a database where to store all the links to NYT and the last_id_tweet.
-- Implement a database where to dump data from the tweets that the bote made and make some data science analysis
