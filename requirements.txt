@@ -15,5 +15,5 @@ soupsieve==2.0
 tweepy==3.8.0
 tzlocal==2.0.0
 update-checker==0.16
-urllib3==1.25.8
+urllib3==1.26.5
 websocket-client==0.57.0
